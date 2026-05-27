@@ -29,6 +29,7 @@ import {
   updateBlogPost,
   updateContactMessageStatus,
   updateProject,
+  uploadPortfolioImage,
 } from '../utils/api';
 
 interface DashboardProps {
@@ -83,10 +84,12 @@ export default function Dashboard({
 
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [projectUploadLoading, setProjectUploadLoading] = useState(false);
   const [cmsFeedback, setCmsFeedback] = useState({ success: false, msg: '' });
 
   const [blogForm, setBlogForm] = useState(emptyBlogForm);
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
+  const [blogUploadLoading, setBlogUploadLoading] = useState(false);
   const [blogFeedback, setBlogFeedback] = useState({ success: false, msg: '' });
 
   useEffect(() => {
@@ -162,6 +165,47 @@ export default function Dashboard({
       onRefreshPortfolio();
     } catch (err: any) {
       setCmsFeedback({ success: false, msg: err.message || 'Project save failed.' });
+    }
+  };
+
+
+  const handleImageUpload = async (
+    file: File | undefined,
+    target: 'project' | 'blog',
+  ) => {
+    if (!file) return;
+
+    const setLoading = target === 'project' ? setProjectUploadLoading : setBlogUploadLoading;
+    const setFeedback = target === 'project' ? setCmsFeedback : setBlogFeedback;
+
+    try {
+      setLoading(true);
+
+      const imageUrl = await uploadPortfolioImage(file);
+
+      if (target === 'project') {
+        setProjectForm(prev => ({
+          ...prev,
+          image: imageUrl,
+        }));
+      } else {
+        setBlogForm(prev => ({
+          ...prev,
+          coverImage: imageUrl,
+        }));
+      }
+
+      setFeedback({
+        success: true,
+        msg: 'Image uploaded successfully.',
+      });
+    } catch (err: any) {
+      setFeedback({
+        success: false,
+        msg: err.message || 'Upload failed.',
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -491,6 +535,52 @@ export default function Dashboard({
                           className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
                         />
 
+                        <div className="space-y-3">
+                          <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                            Or Upload Image
+                          </label>
+
+                          <label
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              handleImageUpload(e.dataTransfer.files?.[0], 'project');
+                            }}
+                            className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
+                          >
+                            <span className="text-xs text-slate-400 font-sans text-center">
+                              Drag & drop image here or click to upload
+                            </span>
+                            <span className="text-[10px] text-slate-600 font-mono mt-1">
+                              PNG, JPEG, WEBP, or GIF up to 5MB
+                            </span>
+
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              className="hidden"
+                              onChange={(e) => {
+                                handleImageUpload(e.target.files?.[0], 'project');
+                                e.currentTarget.value = '';
+                              }}
+                            />
+                          </label>
+
+                          {projectUploadLoading && (
+                            <div className="text-xs text-rose-300 font-mono">
+                              Uploading image...
+                            </div>
+                          )}
+
+                          {projectForm.image && (
+                            <img
+                              src={projectForm.image}
+                              alt="Project preview"
+                              className="w-full h-48 object-cover rounded-2xl border border-white/10"
+                            />
+                          )}
+                        </div>
+
                         <input
                           value={projectForm.clientName}
                           onChange={(e) => setProjectForm(prev => ({ ...prev, clientName: e.target.value }))}
@@ -593,6 +683,52 @@ export default function Dashboard({
                           placeholder="Cover image URL"
                           className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
                         />
+
+                        <div className="space-y-3">
+                          <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                            Or Upload Cover Image
+                          </label>
+
+                          <label
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              handleImageUpload(e.dataTransfer.files?.[0], 'blog');
+                            }}
+                            className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
+                          >
+                            <span className="text-xs text-slate-400 font-sans text-center">
+                              Drag & drop image here or click to upload
+                            </span>
+                            <span className="text-[10px] text-slate-600 font-mono mt-1">
+                              PNG, JPEG, WEBP, or GIF up to 5MB
+                            </span>
+
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              className="hidden"
+                              onChange={(e) => {
+                                handleImageUpload(e.target.files?.[0], 'blog');
+                                e.currentTarget.value = '';
+                              }}
+                            />
+                          </label>
+
+                          {blogUploadLoading && (
+                            <div className="text-xs text-rose-300 font-mono">
+                              Uploading image...
+                            </div>
+                          )}
+
+                          {blogForm.coverImage && (
+                            <img
+                              src={blogForm.coverImage}
+                              alt="Blog cover preview"
+                              className="w-full h-48 object-cover rounded-2xl border border-white/10"
+                            />
+                          )}
+                        </div>
 
                         <textarea
                           value={blogForm.summary}

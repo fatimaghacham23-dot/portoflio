@@ -347,3 +347,50 @@ export async function signOutAdmin(): Promise<void> {
   const { error } = await getSupabaseClient().auth.signOut();
   if (error) throw new Error(error.message);
 }
+
+export async function uploadPortfolioImage(file: File): Promise<string> {
+  const allowedTypes = [
+    'image/png',
+    'image/jpeg',
+    'image/webp',
+    'image/gif',
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error('Only PNG, JPEG, WEBP, and GIF images are allowed.');
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    throw new Error('Image must be smaller than 5MB.');
+  }
+
+  const supabase = getSupabaseClient();
+  const extension = file.name.split('.').pop()?.toLowerCase() || 'png';
+  const safeExtension = extension.replace(/[^a-z0-9]/g, '') || 'png';
+  const uniqueId =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  const filePath = `portfolio/${uniqueId}.${safeExtension}`;
+
+  const { error } = await supabase.storage
+    .from('portfolio-images')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type,
+    });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const { data } = supabase.storage
+    .from('portfolio-images')
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
