@@ -87,7 +87,7 @@ export default function ContactForm({
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans tracking-tight font-light text-white mb-6 leading-tight">
             Initiate Collaboration: <span className="font-serif italic font-normal text-rose-400">Let's Design</span>
           </h2>
-          <p className="max-w-xl mx-auto text-slate-400 font-sans leading-relaxed text-sm">
+          <p className="max-w-xl mx-auto text-slate-400 font-body leading-relaxed text-sm">
             Send a project note or collaboration request. Messages are stored in Supabase for Fatima to review from the admin dashboard.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function ContactForm({
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Your name"
-                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-sans transition-all"
+                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-body transition-all"
                     />
                   </div>
                   <div>
@@ -127,7 +127,7 @@ export default function ContactForm({
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="you@example.com"
-                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-sans transition-all"
+                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-body transition-all"
                     />
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export default function ContactForm({
                       value={formData.company}
                       onChange={handleChange}
                       placeholder="Company or studio"
-                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-sans transition-all"
+                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-body transition-all"
                     />
                   </div>
                   <div>
@@ -155,7 +155,7 @@ export default function ContactForm({
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="Project subject"
-                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-sans transition-all"
+                      className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-body transition-all"
                     />
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function ContactForm({
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Share the collaboration details, scope, timeline, or question."
-                    className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-sans transition-all resize-none"
+                    className="w-full bg-slate-950 text-white border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 font-body transition-all resize-none"
                   />
                 </div>
 
@@ -184,7 +184,7 @@ export default function ContactForm({
                   id="contact-submit-btn"
                   type="submit"
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-rose-600 hover:bg-rose-700 font-sans font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2 hover:translate-x-1 disabled:opacity-50"
+                  className="w-full sm:w-auto px-8 py-3.5 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2 hover:translate-x-1 disabled:opacity-50"
                 >
                   {loading ? 'Submitting request...' : 'Send Collaboration Request'}
                   <Send className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export default function ContactForm({
                   <h4 className="text-2xl font-sans font-light tracking-tight text-white">
                     Message Received
                   </h4>
-                  <p className="text-xs text-slate-400 font-sans max-w-md mx-auto mt-2">
+                  <p className="text-xs text-slate-400 font-body max-w-md mx-auto mt-2">
                     Your message was saved successfully. Fatima can review it from the admin dashboard.
                   </p>
                 </div>
@@ -231,7 +231,7 @@ export default function ContactForm({
                     </p>
                     <div className="h-px bg-white/5 my-2" />
 
-                    <p className="text-slate-400 leading-normal font-sans italic p-2.5 bg-slate-950/60 rounded border border-white/5 text-[11px]">
+                    <p className="text-slate-400 leading-normal font-body italic p-2.5 bg-slate-950/60 rounded border border-white/5 text-[11px]">
                       This form stores the request only. Email notifications are not configured yet.
                     </p>
                   </div>
@@ -241,7 +241,7 @@ export default function ContactForm({
                   <button
                     id="back-contact-btn"
                     onClick={() => setSuccessResponse(false)}
-                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-sans font-medium transition"
+                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-body font-medium transition"
                   >
                     Send Another Message
                   </button>

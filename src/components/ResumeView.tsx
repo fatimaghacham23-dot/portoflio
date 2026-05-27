@@ -24,7 +24,7 @@ export default function ResumeView() {
                 Curriculum Vitae: <br />
                 <span className="font-serif italic font-normal text-rose-600">The Creative Matrix</span>
               </h3>
-              <p className="text-sm font-sans text-slate-500 mt-4 leading-relaxed">
+              <p className="text-sm font-body text-slate-500 mt-4 leading-relaxed">
                 Resume details are not published yet.
               </p>
             </div>
@@ -36,7 +36,7 @@ export default function ResumeView() {
 
               <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
                 <Sparkles className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-sans text-sm">No resume skills published yet.</p>
+                <p className="text-slate-500 font-body text-sm">No resume skills published yet.</p>
               </div>
             </div>
 
@@ -44,7 +44,7 @@ export default function ResumeView() {
               id="download-resume-btn"
               type="button"
               disabled
-              className="w-full py-4.5 bg-slate-900 text-white font-sans text-xs font-bold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 border border-slate-950/20 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-4.5 bg-slate-900 text-white font-body text-xs font-bold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 border border-slate-950/20 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
               Resume PDF not connected yet
@@ -56,14 +56,14 @@ export default function ResumeView() {
               Professional Timeline
             </span>
 
-            <div className="relative border-l border-slate-100 pl-5 sm:pl-6 md:pl-8 space-y-10 font-sans">
+            <div className="relative border-l border-slate-100 pl-5 sm:pl-6 md:pl-8 space-y-10 font-body">
               <div className="relative group/timeline">
                 <div className="absolute -left-[31px] md:-left-[39px] top-1.5 w-4.5 h-4.5 rounded-full bg-slate-100 group-hover/timeline:bg-rose-100 transition-colors flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-slate-400 group-hover/timeline:bg-rose-600 transition-colors" />
                 </div>
                 <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
                   <Briefcase className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                  <p className="text-slate-500 font-sans text-sm">No work history published yet.</p>
+                  <p className="text-slate-500 font-body text-sm">No work history published yet.</p>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function ResumeView() {
               </span>
               <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
                 <GraduationCap className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-sans text-sm">No education details published yet.</p>
+                <p className="text-slate-500 font-body text-sm">No education details published yet.</p>
               </div>
             </div>
           </div>

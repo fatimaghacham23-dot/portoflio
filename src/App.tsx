@@ -69,7 +69,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased relative selection:bg-rose-100 selection:text-rose-900">
+    <div className="min-h-screen bg-slate-50 font-body text-slate-800 antialiased relative selection:bg-rose-100 selection:text-rose-900">
       
       {/* Scroll-driven top progress bar */}
       <div
@@ -91,13 +91,13 @@ export default function App() {
           <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-serif italic text-sm font-bold group-hover:bg-rose-600 transition-colors">
             F
           </div>
-          <span className="font-sans font-semibold text-xs sm:text-sm tracking-wide text-slate-900 group-hover:text-rose-600 transition-colors truncate">
+          <span className="font-body font-semibold text-xs sm:text-sm tracking-wide text-slate-900 group-hover:text-rose-600 transition-colors truncate">
             Fatima <span className="text-rose-600 font-serif italic font-normal">Ghacham</span>
           </span>
         </div>
 
         {/* Ribbons links */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-xs font-sans font-medium text-slate-600">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-xs font-body font-medium text-slate-600">
           <button onClick={() => scrollToAnchor('portfolio-section')} className="hover:text-rose-600 focus:outline-none transition-colors">Showroom</button>
           <button onClick={() => scrollToAnchor('blog-section')} className="hover:text-rose-600 focus:outline-none transition-colors">Journals</button>
           <button onClick={() => scrollToAnchor('resume-section')} className="hover:text-rose-600 focus:outline-none transition-colors">CV Matrix</button>
@@ -116,7 +116,7 @@ export default function App() {
           )}
           <button
             onClick={() => scrollToAnchor('contact-section')}
-            className="px-3 sm:px-4.5 py-2 rounded-full bg-slate-900 hover:bg-rose-600 text-white text-[11px] sm:text-xs font-sans font-medium transition-all shadow-sm hover:translate-y-[-1px]"
+            className="px-3 sm:px-4.5 py-2 rounded-full bg-slate-900 hover:bg-rose-600 text-white text-[11px] sm:text-xs font-body font-medium transition-all shadow-sm hover:translate-y-[-1px]"
           >
             Collaborate
           </button>
@@ -237,12 +237,12 @@ export default function App() {
       </main>
 
       {/* HIGH POLISHED COMPOSURE FOOTER */}
-      <footer className="bg-slate-950 text-slate-400 py-14 sm:py-20 px-4 sm:px-6 font-sans border-t border-white/5 relative z-20">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 text-center sm:text-left">
+      <footer className="bg-slate-950 text-slate-400 py-14 sm:py-20 px-4 sm:px-6 font-body border-t border-white/5 relative z-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           
           {/* Logo card column */}
           <div className="space-y-4">
-            <div className="flex items-center justify-center sm:justify-start gap-2">
+            <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-serif italic text-sm font-bold">
                 F
               </div>
@@ -279,7 +279,7 @@ export default function App() {
           {/* Social connections */}
           <div className="space-y-4 text-xs text-slate-400">
             <span className="text-[10px] font-mono tracking-widest uppercase text-rose-400 font-bold block">VISUALLY CONNECT</span>
-            <div className="flex justify-center sm:justify-start gap-4">
+            <div className="flex gap-4">
               <button type="button" disabled title="Instagram link not connected yet" className="p-2.5 bg-white/5 rounded-full text-slate-500 transition-all shadow-sm cursor-not-allowed">
                 <Instagram className="w-4 h-4" />
               </button>
@@ -296,7 +296,7 @@ export default function App() {
         </div>
 
         <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 text-center text-xs text-slate-600 font-mono leading-normal">
-          <p>(c) 2026 FATIMA GHACHAM.</p>
+          <p>(c) 2026 FATIMA GHACHAM. Portfolio content managed with Supabase.</p>
         </div>
       </footer>
 

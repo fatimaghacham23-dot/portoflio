@@ -40,7 +40,7 @@ export default function BlogSection({
             Designer Journals: <span className="font-serif italic text-rose-600 font-normal">Botanics & Fabric</span>
           </h2>
 
-          <p className="max-w-2xl mx-auto text-slate-500 font-sans leading-relaxed text-sm sm:text-base">
+          <p className="max-w-2xl mx-auto text-slate-500 font-body leading-relaxed text-sm sm:text-base">
             Published notes and reflections from Fatima's studio. Tap on an editorial piece to enter the Reading Room.
           </p>
         </div>
@@ -67,7 +67,7 @@ export default function BlogSection({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
 
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 backdrop-blur-sm shadow rounded-full font-sans text-[10px] font-semibold tracking-wide text-slate-700">
+                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 backdrop-blur-sm shadow rounded-full font-body text-[10px] font-semibold tracking-wide text-slate-700">
                     {blog.date}
                   </div>
                 </div>
@@ -76,7 +76,7 @@ export default function BlogSection({
                   <div>
                     <div className="flex gap-1.5 flex-wrap mb-3.5">
                       {blog.tags.slice(0, 2).map(tag => (
-                        <span key={tag} className="text-[10px] uppercase tracking-wider font-sans font-semibold text-rose-500 bg-rose-50 px-2 py-0.5 rounded">
+                        <span key={tag} className="text-[10px] uppercase tracking-wider font-body font-semibold text-rose-500 bg-rose-50 px-2 py-0.5 rounded">
                           {tag}
                         </span>
                       ))}
@@ -86,12 +86,12 @@ export default function BlogSection({
                       {blog.title}
                     </h3>
 
-                    <p className="text-sm font-sans text-slate-500 line-clamp-2 leading-relaxed">
+                    <p className="text-sm font-body text-slate-500 line-clamp-2 leading-relaxed">
                       {blog.summary}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-slate-400 font-sans text-xs">
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-slate-400 font-body text-xs">
                     <span className="flex items-center gap-1">
                       <User className="w-3.5 h-3.5 text-slate-300" /> By {blog.author}
                     </span>
@@ -106,7 +106,7 @@ export default function BlogSection({
         ) : (
           <div className="bg-white/80 rounded-3xl border border-slate-100 shadow-sm py-16 px-6 text-center">
             <Tag className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-            <p className="text-slate-500 font-sans text-sm">No blog posts yet.</p>
+            <p className="text-slate-500 font-body text-sm">No blog posts yet.</p>
           </div>
         )}
       </div>
@@ -142,7 +142,7 @@ export default function BlogSection({
                   <div className="absolute bottom-5 sm:bottom-8 left-5 sm:left-8 right-5 sm:right-8 text-white">
                     <div className="flex gap-2 mb-3">
                       {readingBlog.tags.map(tag => (
-                        <span key={tag} className="px-2.5 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-sans font-semibold tracking-wider rounded uppercase">
+                        <span key={tag} className="px-2.5 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-body font-semibold tracking-wider rounded uppercase">
                           {tag}
                         </span>
                       ))}
@@ -154,7 +154,7 @@ export default function BlogSection({
                 </div>
 
                 <div className="p-5 sm:p-8 md:p-12">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400 font-sans pb-6 border-b border-slate-100 mb-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400 font-body pb-6 border-b border-slate-100 mb-8">
                     <span className="flex items-center gap-1.5">
                       <User className="w-3.5 h-3.5" /> Published by <strong className="text-slate-800">{readingBlog.author}</strong>
                     </span>
@@ -163,7 +163,7 @@ export default function BlogSection({
                     </span>
                   </div>
 
-                  <div className="prose prose-rose max-w-none text-slate-700 font-sans leading-relaxed text-sm md:text-base space-y-5">
+                  <div className="prose prose-rose max-w-none text-slate-700 font-body leading-relaxed text-sm md:text-base space-y-5">
                     {readingBlog.content.split('\n\n').map((para, i) => {
                       if (para.startsWith('###')) {
                         return (

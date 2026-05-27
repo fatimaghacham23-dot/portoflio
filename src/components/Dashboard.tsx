@@ -338,7 +338,7 @@ export default function Dashboard({
                     placeholder="email@example.com"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition-all font-sans"
+                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition-all font-body"
                   />
                 </div>
               </div>
@@ -356,7 +356,7 @@ export default function Dashboard({
                     placeholder="Password"
                     value={passwordInput}
                     onChange={(e) => setPasswordInput(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition-all font-sans"
+                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition-all font-body"
                   />
                 </div>
               </div>
@@ -371,7 +371,7 @@ export default function Dashboard({
                 id="submit-login-btn"
                 type="submit"
                 disabled={authLoading || !isSupabaseConfigured()}
-                className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-sans font-semibold text-white rounded-xl text-sm transition-all focus:outline-none disabled:opacity-50 flex items-center justify-center gap-2 hover:scale-[1.01]"
+                className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-sm transition-all focus:outline-none disabled:opacity-50 flex items-center justify-center gap-2 hover:scale-[1.01]"
               >
                 {authLoading ? 'Signing in...' : 'Sign In to Dashboard'}
                 <Sparkles className="w-4 h-4" />
@@ -392,7 +392,7 @@ export default function Dashboard({
                       Admin
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans break-all sm:break-normal">
+                  <p className="text-xs text-slate-400 font-body break-all sm:break-normal">
                     {currentSession.email} - Supabase Auth session
                   </p>
                 </div>
@@ -411,7 +411,7 @@ export default function Dashboard({
                 <button
                   id="dashboard-logout-btn"
                   onClick={onLogout}
-                  className="flex items-center gap-1.5 px-4.5 py-2 bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 hover:text-white text-xs font-sans font-medium rounded-xl transition-all"
+                  className="flex items-center gap-1.5 px-4.5 py-2 bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 hover:text-white text-xs font-body font-medium rounded-xl transition-all"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Logout
@@ -434,7 +434,7 @@ export default function Dashboard({
                     <button
                       key={tab.id}
                       onClick={() => setAdminActiveTab(tab.id as 'analytics' | 'cms' | 'messages')}
-                      className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs font-sans tracking-wide text-left transition-all whitespace-nowrap lg:w-full ${
+                      className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs font-body tracking-wide text-left transition-all whitespace-nowrap lg:w-full ${
                         adminActiveTab === tab.id
                           ? 'bg-rose-600/20 text-[#FDA4AF] font-medium border-l-2 border-rose-500'
                           : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -461,7 +461,7 @@ export default function Dashboard({
 
                     <div className="bg-[#0B0F19] p-6 sm:p-8 border border-white/5 rounded-2xl text-center">
                       <BarChart3 className="w-10 h-10 mx-auto text-slate-600 mb-4" />
-                      <p className="text-slate-400 font-sans text-sm">
+                      <p className="text-slate-400 font-body text-sm">
                         Analytics not connected yet.
                       </p>
                     </div>
@@ -507,14 +507,14 @@ export default function Dashboard({
                           value={projectForm.title}
                           onChange={(e) => setProjectForm(prev => ({ ...prev, title: e.target.value }))}
                           placeholder="Project title"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <select
                             value={projectForm.category}
                             onChange={(e) => setProjectForm(prev => ({ ...prev, category: e.target.value as ProjectCategory }))}
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                           >
                             <option value="fashion">Fashion</option>
                             <option value="graphic">Graphic</option>
@@ -524,7 +524,7 @@ export default function Dashboard({
                             type="date"
                             value={projectForm.date}
                             onChange={(e) => setProjectForm(prev => ({ ...prev, date: e.target.value }))}
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                           />
                         </div>
 
@@ -532,7 +532,7 @@ export default function Dashboard({
                           value={projectForm.image}
                           onChange={(e) => setProjectForm(prev => ({ ...prev, image: e.target.value }))}
                           placeholder="Image URL"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
                         <div className="space-y-3">
@@ -548,7 +548,7 @@ export default function Dashboard({
                             }}
                             className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
                           >
-                            <span className="text-xs text-slate-400 font-sans text-center">
+                            <span className="text-xs text-slate-400 font-body text-center">
                               Drag & drop image here or click to upload
                             </span>
                             <span className="text-[10px] text-slate-600 font-mono mt-1">
@@ -585,7 +585,7 @@ export default function Dashboard({
                           value={projectForm.clientName}
                           onChange={(e) => setProjectForm(prev => ({ ...prev, clientName: e.target.value }))}
                           placeholder="Client or context (optional)"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
                         <textarea
@@ -593,17 +593,17 @@ export default function Dashboard({
                           onChange={(e) => setProjectForm(prev => ({ ...prev, description: e.target.value }))}
                           rows={5}
                           placeholder="Project description"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans resize-none"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body resize-none"
                         />
 
                         <input
                           value={projectForm.tags}
                           onChange={(e) => setProjectForm(prev => ({ ...prev, tags: e.target.value }))}
                           placeholder="Tags separated by commas"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
-                        <label className="flex items-center gap-2 text-xs text-slate-300 font-sans">
+                        <label className="flex items-center gap-2 text-xs text-slate-300 font-body">
                           <input
                             type="checkbox"
                             checked={projectForm.published}
@@ -625,7 +625,7 @@ export default function Dashboard({
 
                         <button
                           type="submit"
-                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-sans font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           {editingProjectId ? 'Update Project' : 'Save Project'}
@@ -659,7 +659,7 @@ export default function Dashboard({
                           value={blogForm.title}
                           onChange={(e) => setBlogForm(prev => ({ ...prev, title: e.target.value }))}
                           placeholder="Blog title"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -667,13 +667,13 @@ export default function Dashboard({
                             value={blogForm.author}
                             onChange={(e) => setBlogForm(prev => ({ ...prev, author: e.target.value }))}
                             placeholder="Author"
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                           />
                           <input
                             type="date"
                             value={blogForm.date}
                             onChange={(e) => setBlogForm(prev => ({ ...prev, date: e.target.value }))}
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                           />
                         </div>
 
@@ -681,7 +681,7 @@ export default function Dashboard({
                           value={blogForm.coverImage}
                           onChange={(e) => setBlogForm(prev => ({ ...prev, coverImage: e.target.value }))}
                           placeholder="Cover image URL"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
                         <div className="space-y-3">
@@ -697,7 +697,7 @@ export default function Dashboard({
                             }}
                             className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
                           >
-                            <span className="text-xs text-slate-400 font-sans text-center">
+                            <span className="text-xs text-slate-400 font-body text-center">
                               Drag & drop image here or click to upload
                             </span>
                             <span className="text-[10px] text-slate-600 font-mono mt-1">
@@ -735,7 +735,7 @@ export default function Dashboard({
                           onChange={(e) => setBlogForm(prev => ({ ...prev, summary: e.target.value }))}
                           rows={2}
                           placeholder="Summary"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans resize-none"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body resize-none"
                         />
 
                         <textarea
@@ -743,17 +743,17 @@ export default function Dashboard({
                           onChange={(e) => setBlogForm(prev => ({ ...prev, content: e.target.value }))}
                           rows={6}
                           placeholder="Article content"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans resize-none"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body resize-none"
                         />
 
                         <input
                           value={blogForm.tags}
                           onChange={(e) => setBlogForm(prev => ({ ...prev, tags: e.target.value }))}
                           placeholder="Tags separated by commas"
-                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-sans"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
                         />
 
-                        <label className="flex items-center gap-2 text-xs text-slate-300 font-sans">
+                        <label className="flex items-center gap-2 text-xs text-slate-300 font-body">
                           <input
                             type="checkbox"
                             checked={blogForm.published}
@@ -775,7 +775,7 @@ export default function Dashboard({
 
                         <button
                           type="submit"
-                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-sans font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           {editingBlogId ? 'Update Blog Post' : 'Save Blog Post'}
@@ -900,7 +900,7 @@ export default function Dashboard({
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-xs text-slate-400 font-sans mt-0.5 break-all sm:break-normal">
+                                <p className="text-xs text-slate-400 font-body mt-0.5 break-all sm:break-normal">
                                   {message.email} - {new Date(message.createdAt).toLocaleString()}
                                 </p>
                               </div>
@@ -917,7 +917,7 @@ export default function Dashboard({
                                   <button
                                     type="button"
                                     onClick={() => handleMessageStatus(message.id, 'reviewed')}
-                                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-sans font-medium rounded transition"
+                                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-body font-medium rounded transition"
                                   >
                                     Mark Reviewed
                                   </button>
@@ -926,7 +926,7 @@ export default function Dashboard({
                                   <button
                                     type="button"
                                     onClick={() => handleMessageStatus(message.id, 'archived')}
-                                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-sans font-medium rounded transition"
+                                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-body font-medium rounded transition"
                                   >
                                     Archive
                                   </button>
@@ -946,7 +946,7 @@ export default function Dashboard({
                               <span className="text-[10px] font-mono text-[#FDA4AF] block uppercase tracking-wider">
                                 Subject: {message.subject}
                               </span>
-                              <p className="text-slate-300 font-sans text-sm leading-relaxed whitespace-pre-line break-words">
+                              <p className="text-slate-300 font-body text-sm leading-relaxed whitespace-pre-line break-words">
                                 {message.message}
                               </p>
                             </div>
