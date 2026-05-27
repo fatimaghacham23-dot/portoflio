@@ -29,7 +29,7 @@ import {
   updateBlogPost,
   updateContactMessageStatus,
   updateProject,
-  uploadPortfolioImage,
+  uploadPortfolioMedia,
 } from '../utils/api';
 
 interface DashboardProps {
@@ -45,6 +45,8 @@ const emptyProjectForm = () => ({
   title: '',
   category: 'fashion' as ProjectCategory,
   image: '',
+  mediaType: 'image' as const,
+  mediaUrl: '',
   description: '',
   tags: '',
   clientName: '',
@@ -85,11 +87,13 @@ export default function Dashboard({
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [projectUploadLoading, setProjectUploadLoading] = useState(false);
+  const [savingProject, setSavingProject] = useState(false);
   const [cmsFeedback, setCmsFeedback] = useState({ success: false, msg: '' });
 
   const [blogForm, setBlogForm] = useState(emptyBlogForm);
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
   const [blogUploadLoading, setBlogUploadLoading] = useState(false);
+  const [savingBlog, setSavingBlog] = useState(false);
   const [blogFeedback, setBlogFeedback] = useState({ success: false, msg: '' });
 
   useEffect(() => {
@@ -134,16 +138,22 @@ export default function Dashboard({
 
   const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (savingProject) return;
+
     if (!projectForm.title || !projectForm.image || !projectForm.description) {
-      setCmsFeedback({ success: false, msg: 'Please provide a title, image URL, and description.' });
+      setCmsFeedback({ success: false, msg: 'Please provide a title, image/video URL, and description.' });
       return;
     }
+
+    setSavingProject(true);
 
     try {
       const payload = {
         title: projectForm.title,
         category: projectForm.category,
         image: projectForm.image,
+        mediaType: projectForm.mediaType,
+        mediaUrl: projectForm.mediaUrl || projectForm.image,
         description: projectForm.description,
         tags: parseTags(projectForm.tags),
         clientName: projectForm.clientName || undefined,
@@ -165,11 +175,13 @@ export default function Dashboard({
       onRefreshPortfolio();
     } catch (err: any) {
       setCmsFeedback({ success: false, msg: err.message || 'Project save failed.' });
+    } finally {
+      setSavingProject(false);
     }
   };
 
 
-  const handleImageUpload = async (
+  const handleMediaUpload = async (
     file: File | undefined,
     target: 'project' | 'blog',
   ) => {
@@ -181,23 +193,31 @@ export default function Dashboard({
     try {
       setLoading(true);
 
-      const imageUrl = await uploadPortfolioImage(file);
+      const result = await uploadPortfolioMedia(file);
 
       if (target === 'project') {
         setProjectForm(prev => ({
           ...prev,
-          image: imageUrl,
+          image: result.url,
+          mediaUrl: result.url,
+          mediaType: result.mediaType,
         }));
       } else {
+        if (result.mediaType === 'video') {
+          throw new Error('Blog cover uploads currently support images only.');
+        }
+
         setBlogForm(prev => ({
           ...prev,
-          coverImage: imageUrl,
+          coverImage: result.url,
         }));
       }
 
       setFeedback({
         success: true,
-        msg: 'Image uploaded successfully.',
+        msg: result.mediaType === 'video'
+          ? 'Video uploaded successfully.'
+          : 'Image uploaded successfully.',
       });
     } catch (err: any) {
       setFeedback({
@@ -211,10 +231,14 @@ export default function Dashboard({
 
   const handleBlogSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (savingBlog) return;
+
     if (!blogForm.title || !blogForm.content || !blogForm.coverImage) {
       setBlogFeedback({ success: false, msg: 'Please provide a title, cover image URL, and article content.' });
       return;
     }
+
+    setSavingBlog(true);
 
     try {
       const payload = {
@@ -242,6 +266,8 @@ export default function Dashboard({
       onRefreshPortfolio();
     } catch (err: any) {
       setBlogFeedback({ success: false, msg: err.message || 'Blog post save failed.' });
+    } finally {
+      setSavingBlog(false);
     }
   };
 
@@ -251,6 +277,8 @@ export default function Dashboard({
       title: project.title,
       category: project.category,
       image: project.image,
+      mediaType: project.mediaType || 'image',
+      mediaUrl: project.mediaUrl || project.image,
       description: project.description,
       tags: project.tags.join(', '),
       clientName: project.clientName || '',
@@ -537,14 +565,14 @@ export default function Dashboard({
 
                         <div className="space-y-3">
                           <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                            Or Upload Image
+                            Or Upload Image or Video
                           </label>
 
                           <label
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                               e.preventDefault();
-                              handleImageUpload(e.dataTransfer.files?.[0], 'project');
+                              handleMediaUpload(e.dataTransfer.files?.[0], 'project');
                             }}
                             className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
                           >
@@ -552,15 +580,15 @@ export default function Dashboard({
                               Drag & drop image here or click to upload
                             </span>
                             <span className="text-[10px] text-slate-600 font-mono mt-1">
-                              PNG, JPEG, WEBP, or GIF up to 5MB
+                              PNG, JPEG, WEBP, GIF up to 5MB. MP4, WEBM, MOV up to 25MB
                             </span>
 
                             <input
                               type="file"
-                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime"
                               className="hidden"
                               onChange={(e) => {
-                                handleImageUpload(e.target.files?.[0], 'project');
+                                handleMediaUpload(e.target.files?.[0], 'project');
                                 e.currentTarget.value = '';
                               }}
                             />
@@ -572,12 +600,24 @@ export default function Dashboard({
                             </div>
                           )}
 
-                          {projectForm.image && (
-                            <img
-                              src={projectForm.image}
-                              alt="Project preview"
-                              className="w-full h-48 object-cover rounded-2xl border border-white/10"
-                            />
+                          {(projectForm.mediaUrl || projectForm.image) && (
+                            projectForm.mediaType === 'video' ? (
+                              <video
+                                src={projectForm.mediaUrl || projectForm.image}
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                controls
+                                className="w-full h-56 object-cover rounded-2xl border border-white/10"
+                              />
+                            ) : (
+                              <img
+                                src={projectForm.mediaUrl || projectForm.image}
+                                alt="Project preview"
+                                className="w-full h-56 object-cover rounded-2xl border border-white/10"
+                              />
+                            )
                           )}
                         </div>
 
@@ -625,10 +665,11 @@ export default function Dashboard({
 
                         <button
                           type="submit"
-                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+                          disabled={savingProject || projectUploadLoading}
+                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Plus className="w-3.5 h-3.5" />
-                          {editingProjectId ? 'Update Project' : 'Save Project'}
+                          {savingProject ? 'Saving...' : editingProjectId ? 'Update Project' : 'Save Project'}
                         </button>
                       </motion.form>
 
@@ -693,7 +734,7 @@ export default function Dashboard({
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                               e.preventDefault();
-                              handleImageUpload(e.dataTransfer.files?.[0], 'blog');
+                              handleMediaUpload(e.dataTransfer.files?.[0], 'blog');
                             }}
                             className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
                           >
@@ -709,7 +750,7 @@ export default function Dashboard({
                               accept="image/png,image/jpeg,image/webp,image/gif"
                               className="hidden"
                               onChange={(e) => {
-                                handleImageUpload(e.target.files?.[0], 'blog');
+                                handleMediaUpload(e.target.files?.[0], 'blog');
                                 e.currentTarget.value = '';
                               }}
                             />
@@ -775,10 +816,11 @@ export default function Dashboard({
 
                         <button
                           type="submit"
-                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+                          disabled={savingBlog || blogUploadLoading}
+                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Plus className="w-3.5 h-3.5" />
-                          {editingBlogId ? 'Update Blog Post' : 'Save Blog Post'}
+                          {savingBlog ? 'Saving...' : editingBlogId ? 'Update Blog Post' : 'Save Blog Post'}
                         </button>
                       </motion.form>
                     </div>
@@ -796,7 +838,7 @@ export default function Dashboard({
                                   <div>
                                     <h5 className="text-sm font-sans font-medium text-white break-words">{project.title}</h5>
                                     <p className="text-[10px] font-mono text-slate-500 mt-1">
-                                      {project.category.toUpperCase()} - {project.published ? 'Published' : 'Draft'}
+                                      {project.category.toUpperCase()} - {(project.mediaType || 'image').toUpperCase()} - {project.published ? 'Published' : 'Draft'}
                                     </p>
                                   </div>
                                   <div className="flex gap-2">

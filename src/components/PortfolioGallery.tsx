@@ -126,12 +126,23 @@ export default function PortfolioGallery({
 
                 {/* Display Image Outer with Floral Hover effect */}
                 <div className="relative w-full h-[300px] sm:h-[360px] lg:h-[420px] overflow-hidden bg-white">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                  />
+                  {project.mediaType === 'video' ? (
+                    <video
+                      src={project.mediaUrl || project.image}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={project.mediaUrl || project.image}
+                      alt={project.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                    />
+                  )}
 
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
@@ -228,12 +239,24 @@ export default function PortfolioGallery({
 
               {/* Banner / Product View Image Area */}
               <div className="w-full lg:w-1/2 relative bg-white h-[320px] sm:h-[420px] lg:h-auto lg:min-h-[560px]">
-                <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-contain"
-                />
+                {selectedProject.mediaType === 'video' ? (
+                  <video
+                    src={selectedProject.mediaUrl || selectedProject.image}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={selectedProject.mediaUrl || selectedProject.image}
+                    alt={selectedProject.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-contain"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent lg:hidden" />
                 <div className="absolute bottom-6 left-6 right-6 lg:hidden">
                   <span className="px-3 py-1 rounded-full bg-rose-600 text-white font-body text-xs tracking-wider uppercase font-medium">

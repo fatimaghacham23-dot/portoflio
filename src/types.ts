@@ -1,4 +1,5 @@
 export type ProjectCategory = 'fashion' | 'graphic' | 'hybrid';
+export type ProjectMediaType = 'image' | 'video';
 
 export interface FashionDetails {
   fabrics?: string;
@@ -17,6 +18,8 @@ export interface Project {
   title: string;
   category: ProjectCategory;
   image: string;
+  mediaType?: ProjectMediaType;
+  mediaUrl?: string;
   description: string;
   tags: string[];
   fashionDetails?: FashionDetails;
@@ -32,6 +35,8 @@ export interface ProjectInput {
   title: string;
   category: ProjectCategory;
   image: string;
+  mediaType?: ProjectMediaType;
+  mediaUrl?: string;
   description: string;
   tags: string[];
   fashionDetails?: FashionDetails;

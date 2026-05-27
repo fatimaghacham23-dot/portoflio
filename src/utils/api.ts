@@ -11,6 +11,7 @@ import {
   Project,
   ProjectCategory,
   ProjectInput,
+  ProjectMediaType,
 } from '../types';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -39,6 +40,8 @@ interface ProjectRow {
   title: string;
   category: ProjectCategory;
   image_url: string;
+  media_type: ProjectMediaType | null;
+  media_url: string | null;
   description: string;
   tags: string[] | null;
   fashion_details: FashionDetails | null;
@@ -82,6 +85,8 @@ function mapProject(row: ProjectRow): Project {
     title: row.title,
     category: row.category,
     image: row.image_url,
+    mediaType: row.media_type ?? 'image',
+    mediaUrl: row.media_url ?? row.image_url,
     description: row.description,
     tags: row.tags ?? [],
     fashionDetails: row.fashion_details ?? undefined,
@@ -129,6 +134,8 @@ function projectToRow(project: ProjectInput) {
     title: project.title,
     category: project.category,
     image_url: project.image,
+    media_type: project.mediaType ?? 'image',
+    media_url: project.mediaUrl ?? project.image,
     description: project.description,
     tags: project.tags,
     fashion_details: project.fashionDetails ?? null,
@@ -348,33 +355,65 @@ export async function signOutAdmin(): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
-export async function uploadPortfolioImage(file: File): Promise<string> {
-  const allowedTypes = [
+export async function uploadPortfolioMedia(
+  file: File,
+): Promise<{
+  url: string;
+  mediaType: ProjectMediaType;
+}> {
+  const imageTypes = [
     'image/png',
     'image/jpeg',
     'image/webp',
     'image/gif',
   ];
 
+  const videoTypes = [
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+  ];
+
+  const allowedTypes = [...imageTypes, ...videoTypes];
+
   if (!allowedTypes.includes(file.type)) {
-    throw new Error('Only PNG, JPEG, WEBP, and GIF images are allowed.');
+    throw new Error(
+      'Only PNG, JPEG, WEBP, GIF, MP4, WEBM, and MOV files are allowed.',
+    );
   }
 
-  const maxSize = 5 * 1024 * 1024;
+  const isVideo = videoTypes.includes(file.type);
+
+  const maxSize = isVideo
+    ? 25 * 1024 * 1024
+    : 5 * 1024 * 1024;
 
   if (file.size > maxSize) {
-    throw new Error('Image must be smaller than 5MB.');
+    throw new Error(
+      isVideo
+        ? 'Video must be smaller than 25MB.'
+        : 'Image must be smaller than 5MB.',
+    );
   }
 
   const supabase = getSupabaseClient();
-  const extension = file.name.split('.').pop()?.toLowerCase() || 'png';
-  const safeExtension = extension.replace(/[^a-z0-9]/g, '') || 'png';
+
+  const extension =
+    file.name.split('.').pop()?.toLowerCase() || 'bin';
+
+  const safeExtension =
+    extension.replace(/[^a-z0-9]/g, '') || 'bin';
+
   const uniqueId =
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      : `${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}`;
 
-  const filePath = `portfolio/${uniqueId}.${safeExtension}`;
+  const folder = isVideo ? 'videos' : 'images';
+
+  const filePath = `portfolio/${folder}/${uniqueId}.${safeExtension}`;
 
   const { error } = await supabase.storage
     .from('portfolio-images')
@@ -392,5 +431,8 @@ export async function uploadPortfolioImage(file: File): Promise<string> {
     .from('portfolio-images')
     .getPublicUrl(filePath);
 
-  return data.publicUrl;
+  return {
+    url: data.publicUrl,
+    mediaType: isVideo ? 'video' : 'image',
+  };
 }

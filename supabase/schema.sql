@@ -39,6 +39,8 @@ create table if not exists public.projects (
   title text not null,
   category text not null check (category in ('fashion', 'graphic', 'hybrid')),
   image_url text not null,
+  media_type text default 'image',
+  media_url text,
   description text not null,
   tags text[] not null default '{}',
   fashion_details jsonb,
@@ -57,6 +59,8 @@ create table if not exists public.blog_posts (
   summary text,
   content text not null,
   cover_image_url text not null,
+  media_type text default 'image',
+  media_url text,
   tags text[] not null default '{}',
   author text not null default 'Fatima Ghacham',
   published_at date not null default current_date,
@@ -286,3 +290,17 @@ using (
       and profiles.role = 'admin'
   )
 );
+
+-- Project media support: image or video.
+alter table public.projects
+add column if not exists media_type text default 'image';
+
+alter table public.projects
+add column if not exists media_url text;
+
+alter table public.projects
+drop constraint if exists projects_media_type_check;
+
+alter table public.projects
+add constraint projects_media_type_check
+check (media_type in ('image', 'video'));
