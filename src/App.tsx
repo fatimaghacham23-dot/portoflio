@@ -296,7 +296,7 @@ export default function App() {
         </div>
 
         <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 text-center text-xs text-slate-600 font-mono leading-normal">
-          <p>(c) 2026 FATIMA GHACHAM. Portfolio content managed with Supabase.</p>
+          <p>(c) 2026 FATIMA GHACHAM.</p>
         </div>
       </footer>
 
