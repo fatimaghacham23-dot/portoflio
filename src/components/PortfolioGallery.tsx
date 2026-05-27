@@ -113,7 +113,7 @@ export default function PortfolioGallery({
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
                 onMouseEnter={() => setHoveredId(project.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="group relative cursor-pointer bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col min-h-[460px] sm:h-[520px]"
+                className="group relative cursor-pointer bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col min-h-[520px] sm:min-h-[620px]"
                 onClick={() => handleOpenProject(project)}
               >
                 {/* Custom Decorative Floating Tag */}
@@ -125,16 +125,16 @@ export default function PortfolioGallery({
                 </span>
 
                 {/* Display Image Outer with Floral Hover effect */}
-                <div className="relative w-full h-[260px] sm:h-[320px] lg:h-[360px] overflow-hidden bg-slate-100">
+                <div className="relative w-full h-[300px] sm:h-[360px] lg:h-[420px] overflow-hidden bg-white">
                   <img
                     src={project.image}
                     alt={project.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                   />
 
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
 
                   {/* Blossom interactive ring on hover */}
                   <AnimatePresence>
@@ -227,14 +227,14 @@ export default function PortfolioGallery({
               </button>
 
               {/* Banner / Product View Image Area */}
-              <div className="w-full lg:w-1/2 relative bg-slate-100 h-[260px] sm:h-[320px] lg:h-auto lg:min-h-[380px]">
+              <div className="w-full lg:w-1/2 relative bg-white h-[320px] sm:h-[420px] lg:h-auto lg:min-h-[560px]">
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent lg:hidden" />
                 <div className="absolute bottom-6 left-6 right-6 lg:hidden">
                   <span className="px-3 py-1 rounded-full bg-rose-600 text-white font-sans text-xs tracking-wider uppercase font-medium">
                     {selectedProject.category}
