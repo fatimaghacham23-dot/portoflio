@@ -20,6 +20,8 @@ export interface Project {
   image: string;
   mediaType?: ProjectMediaType;
   mediaUrl?: string;
+  mediaPositionX?: number;
+  mediaPositionY?: number;
   description: string;
   tags: string[];
   fashionDetails?: FashionDetails;
@@ -37,6 +39,8 @@ export interface ProjectInput {
   image: string;
   mediaType?: ProjectMediaType;
   mediaUrl?: string;
+  mediaPositionX?: number;
+  mediaPositionY?: number;
   description: string;
   tags: string[];
   fashionDetails?: FashionDetails;

@@ -42,6 +42,8 @@ interface ProjectRow {
   image_url: string;
   media_type: ProjectMediaType | null;
   media_url: string | null;
+  media_position_x: number | null;
+  media_position_y: number | null;
   description: string;
   tags: string[] | null;
   fashion_details: FashionDetails | null;
@@ -87,6 +89,8 @@ function mapProject(row: ProjectRow): Project {
     image: row.image_url,
     mediaType: row.media_type ?? 'image',
     mediaUrl: row.media_url ?? row.image_url,
+    mediaPositionX: row.media_position_x ?? 50,
+    mediaPositionY: row.media_position_y ?? 50,
     description: row.description,
     tags: row.tags ?? [],
     fashionDetails: row.fashion_details ?? undefined,
@@ -136,6 +140,8 @@ function projectToRow(project: ProjectInput) {
     image_url: project.image,
     media_type: project.mediaType ?? 'image',
     media_url: project.mediaUrl ?? project.image,
+    media_position_x: project.mediaPositionX ?? 50,
+    media_position_y: project.mediaPositionY ?? 50,
     description: project.description,
     tags: project.tags,
     fashion_details: project.fashionDetails ?? null,

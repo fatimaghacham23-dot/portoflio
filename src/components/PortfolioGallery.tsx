@@ -133,6 +133,7 @@ export default function PortfolioGallery({
                       muted
                       loop
                       playsInline
+                      style={{ objectPosition: `${project.mediaPositionX ?? 50}% ${project.mediaPositionY ?? 50}%` }}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -140,7 +141,8 @@ export default function PortfolioGallery({
                       src={project.mediaUrl || project.image}
                       alt={project.title}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                      style={{ objectPosition: `${project.mediaPositionX ?? 50}% ${project.mediaPositionY ?? 50}%` }}
+                      className="w-full h-full object-cover transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                     />
                   )}
 
@@ -247,6 +249,7 @@ export default function PortfolioGallery({
                     loop
                     playsInline
                     controls
+                    style={{ objectPosition: `${selectedProject.mediaPositionX ?? 50}% ${selectedProject.mediaPositionY ?? 50}%` }}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -254,7 +257,8 @@ export default function PortfolioGallery({
                     src={selectedProject.mediaUrl || selectedProject.image}
                     alt={selectedProject.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain"
+                    style={{ objectPosition: `${selectedProject.mediaPositionX ?? 50}% ${selectedProject.mediaPositionY ?? 50}%` }}
+                    className="w-full h-full object-cover"
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent lg:hidden" />

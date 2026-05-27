@@ -47,6 +47,8 @@ const emptyProjectForm = () => ({
   image: '',
   mediaType: 'image' as const,
   mediaUrl: '',
+  mediaPositionX: 50,
+  mediaPositionY: 50,
   description: '',
   tags: '',
   clientName: '',
@@ -154,6 +156,8 @@ export default function Dashboard({
         image: projectForm.image,
         mediaType: projectForm.mediaType,
         mediaUrl: projectForm.mediaUrl || projectForm.image,
+        mediaPositionX: projectForm.mediaPositionX,
+        mediaPositionY: projectForm.mediaPositionY,
         description: projectForm.description,
         tags: parseTags(projectForm.tags),
         clientName: projectForm.clientName || undefined,
@@ -201,6 +205,8 @@ export default function Dashboard({
           image: result.url,
           mediaUrl: result.url,
           mediaType: result.mediaType,
+          mediaPositionX: 50,
+          mediaPositionY: 50,
         }));
       } else {
         if (result.mediaType === 'video') {
@@ -279,6 +285,8 @@ export default function Dashboard({
       image: project.image,
       mediaType: project.mediaType || 'image',
       mediaUrl: project.mediaUrl || project.image,
+      mediaPositionX: project.mediaPositionX ?? 50,
+      mediaPositionY: project.mediaPositionY ?? 50,
       description: project.description,
       tags: project.tags.join(', '),
       clientName: project.clientName || '',
@@ -609,6 +617,8 @@ export default function Dashboard({
                                 loop
                                 playsInline
                                 controls
+                                style={{ objectPosition: `${projectForm.mediaPositionX}% ${projectForm.mediaPositionY}%` }}
+                                style={{ objectPosition: `${projectForm.mediaPositionX}% ${projectForm.mediaPositionY}%` }}
                                 className="w-full h-56 object-cover rounded-2xl border border-white/10"
                               />
                             ) : (
@@ -618,6 +628,68 @@ export default function Dashboard({
                                 className="w-full h-56 object-cover rounded-2xl border border-white/10"
                               />
                             )
+                          )}
+
+                          {(projectForm.mediaUrl || projectForm.image) && (
+                            <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4 space-y-4">
+                              <div>
+                                <div className="flex items-center justify-between gap-3 mb-2">
+                                  <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                                    Horizontal crop focus
+                                  </label>
+                                  <span className="text-[10px] font-mono text-slate-500">
+                                    {projectForm.mediaPositionX}%
+                                  </span>
+                                </div>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="100"
+                                  value={projectForm.mediaPositionX}
+                                  onChange={(e) => setProjectForm(prev => ({
+                                    ...prev,
+                                    mediaPositionX: Number(e.target.value),
+                                  }))}
+                                  className="w-full accent-rose-600"
+                                />
+                                <div className="flex justify-between text-[9px] font-mono text-slate-600 mt-1">
+                                  <span>Left</span>
+                                  <span>Center</span>
+                                  <span>Right</span>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div className="flex items-center justify-between gap-3 mb-2">
+                                  <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                                    Vertical crop focus
+                                  </label>
+                                  <span className="text-[10px] font-mono text-slate-500">
+                                    {projectForm.mediaPositionY}%
+                                  </span>
+                                </div>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="100"
+                                  value={projectForm.mediaPositionY}
+                                  onChange={(e) => setProjectForm(prev => ({
+                                    ...prev,
+                                    mediaPositionY: Number(e.target.value),
+                                  }))}
+                                  className="w-full accent-rose-600"
+                                />
+                                <div className="flex justify-between text-[9px] font-mono text-slate-600 mt-1">
+                                  <span>Top</span>
+                                  <span>Center</span>
+                                  <span>Bottom</span>
+                                </div>
+                              </div>
+
+                              <p className="text-[10px] text-slate-500 font-body leading-relaxed">
+                                Adjust this to decide which part of the {projectForm.mediaType === 'video' ? 'video' : 'image'} appears inside the project card.
+                              </p>
+                            </div>
                           )}
                         </div>
 
