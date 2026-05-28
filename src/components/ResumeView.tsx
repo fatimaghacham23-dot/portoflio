@@ -25,7 +25,7 @@ export default function ResumeView() {
                 <span className="font-serif italic font-normal text-rose-600">The Creative Matrix</span>
               </h3>
               <p className="text-sm font-body text-slate-500 mt-4 leading-relaxed">
-                Resume details are not published yet.
+                Fatima Ghacham is building a creative path shaped by fashion inspiration, visual design, and a long-standing love for drawing fashion clothing from a young age.
               </p>
             </div>
 
@@ -34,9 +34,33 @@ export default function ResumeView() {
                 Professional Skills
               </span>
 
-              <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
-                <Sparkles className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-body text-sm">No resume skills published yet.</p>
+              <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 space-y-5">
+                {[
+                  { label: 'Fashion inspiration', value: 88 },
+                  { label: 'Creative drawing', value: 84 },
+                  { label: 'Visual composition', value: 78 },
+                  { label: 'Textile and clothing concepts', value: 74 },
+                ].map(skill => (
+                  <div key={skill.label}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-body font-semibold text-slate-700">
+                        {skill.label}
+                      </span>
+                      <span className="text-[10px] font-mono text-rose-500">
+                        {skill.value}%
+                      </span>
+                    </div>
+                    <div className="h-2 rounded-full bg-white border border-slate-100 overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${skill.value}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.9, ease: 'easeOut' }}
+                        className="h-full rounded-full bg-rose-500"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -61,9 +85,23 @@ export default function ResumeView() {
                 <div className="absolute -left-[31px] md:-left-[39px] top-1.5 w-4.5 h-4.5 rounded-full bg-slate-100 group-hover/timeline:bg-rose-100 transition-colors flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-slate-400 group-hover/timeline:bg-rose-600 transition-colors" />
                 </div>
-                <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
-                  <Briefcase className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                  <p className="text-slate-500 font-body text-sm">No work history published yet.</p>
+                <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shrink-0">
+                      <Briefcase className="w-5 h-5 text-rose-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-base font-sans font-medium text-slate-900 tracking-tight">
+                        Creative Fashion & Visual Design Practice
+                      </h4>
+                      <p className="text-[10px] font-mono text-rose-500 uppercase tracking-widest mt-1">
+                        Around 1.5 years experience
+                      </p>
+                      <p className="text-sm font-body text-slate-500 leading-relaxed mt-4">
+                        Practical experience developing fashion concepts, scarf-inspired visual ideas, styling direction, and refined design compositions. Her creative eye is influenced by an early talent for drawing and imagining fashion clothing from a young age.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -72,9 +110,23 @@ export default function ResumeView() {
               <span className="text-[10px] font-mono tracking-widest text-[#E11D48] block uppercase mb-4">
                 Education
               </span>
-              <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center">
-                <GraduationCap className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-body text-sm">No education details published yet.</p>
+              <div className="p-6 sm:p-8 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shrink-0">
+                    <GraduationCap className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-sans font-medium text-slate-900 tracking-tight">
+                      Islamic University of Lebanon, Sour
+                    </h4>
+                    <p className="text-[10px] font-mono text-rose-500 uppercase tracking-widest mt-1">
+                      Medical Laboratory Science
+                    </p>
+                    <p className="text-sm font-body text-slate-500 leading-relaxed mt-4">
+                      Fatima studies Medical Laboratory Science while continuing to develop her creative direction in design and fashion. This balance gives her work a thoughtful mix of precision, observation, elegance, and artistic sensitivity.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
