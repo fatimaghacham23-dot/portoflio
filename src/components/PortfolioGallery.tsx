@@ -133,6 +133,19 @@ export default function PortfolioGallery({
                       muted
                       loop
                       playsInline
+                      preload="auto"
+                      disablePictureInPicture
+                      controls={false}
+                      onLoadedData={(e) => {
+                        const video = e.currentTarget;
+                        video.muted = true;
+                        video.play().catch(() => undefined);
+                      }}
+                      onCanPlay={(e) => {
+                        const video = e.currentTarget;
+                        video.muted = true;
+                        video.play().catch(() => undefined);
+                      }}
                       style={{ objectPosition: `${project.mediaPositionX ?? 50}% ${project.mediaPositionY ?? 50}%` }}
                       className="w-full h-full object-cover"
                     />
@@ -249,6 +262,17 @@ export default function PortfolioGallery({
                     loop
                     playsInline
                     controls
+                    preload="auto"
+                    onLoadedData={(e) => {
+                      const video = e.currentTarget;
+                      video.muted = true;
+                      video.play().catch(() => undefined);
+                    }}
+                    onCanPlay={(e) => {
+                      const video = e.currentTarget;
+                      video.muted = true;
+                      video.play().catch(() => undefined);
+                    }}
                     style={{ objectPosition: `${selectedProject.mediaPositionX ?? 50}% ${selectedProject.mediaPositionY ?? 50}%` }}
                     className="w-full h-full object-cover"
                   />
