@@ -3,10 +3,11 @@ import { motion } from 'motion/react';
 import {
   Instagram, Linkedin, Lock, MoveDown, Sparkles
 } from 'lucide-react';
-import { AdminSession, Project, BlogPost } from './types';
-import { getProjects, getBlogPosts, getCurrentAdminSession, signOutAdmin } from './utils/api';
+import { AdminSession, Project, BlogPost, FashionSketch } from './types';
+import { getProjects, getBlogPosts, getFashionSketches, getCurrentAdminSession, signOutAdmin } from './utils/api';
 import FloralCanvas from './components/FloralCanvas';
 import PortfolioGallery from './components/PortfolioGallery';
+import FashionSketchAtelier from './components/FashionSketchAtelier';
 import BlogSection from './components/BlogSection';
 import ResumeView from './components/ResumeView';
 import Dashboard from './components/Dashboard';
@@ -15,6 +16,7 @@ import ContactForm from './components/ContactForm';
 export default function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [fashionSketches, setFashionSketches] = useState<FashionSketch[]>([]);
 
   // Prefilled contact form subject when clicking project action
   const [prefilledSubject, setPrefilledSubject] = useState('');
@@ -43,8 +45,10 @@ export default function App() {
     try {
       const projs = await getProjects();
       const articleList = await getBlogPosts();
+      const sketchList = await getFashionSketches();
       setProjects(projs);
       setBlogs(articleList);
+      setFashionSketches(sketchList);
     } catch (err) {
       console.error('Failed to load Supabase content:', err);
     }
@@ -99,6 +103,7 @@ export default function App() {
         {/* Ribbons links */}
         <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-xs font-body font-medium text-slate-600">
           <button onClick={() => scrollToAnchor('portfolio-section')} className="hover:text-rose-600 focus:outline-none transition-colors">Showroom</button>
+          <button onClick={() => scrollToAnchor('fashion-sketches-section')} className="hover:text-rose-600 focus:outline-none transition-colors">Sketches</button>
           <button onClick={() => scrollToAnchor('blog-section')} className="hover:text-rose-600 focus:outline-none transition-colors">Journals</button>
           <button onClick={() => scrollToAnchor('resume-section')} className="hover:text-rose-600 focus:outline-none transition-colors">CV Matrix</button>
           <button onClick={() => scrollToAnchor('dashboard-section')} className="hover:text-rose-500 focus:outline-none transition-colors flex items-center gap-1 font-mono text-[11px] text-[#E11D48] bg-rose-50 px-2.5 py-1 rounded-md border border-rose-100">
@@ -211,16 +216,19 @@ export default function App() {
           onInquireAboutProject={handleInquireFromProject}
         />
 
-        {/* SECTION 2: Blog editorial journals */}
+        {/* SECTION 2: Professional Fashion Sketch Atelier */}
+        <FashionSketchAtelier sketches={fashionSketches} />
+
+        {/* SECTION 3: Blog editorial journals */}
         <BlogSection
           blogs={blogs}
           onBlogInteractTracker={() => undefined}
         />
 
-        {/* SECTION 3: Curriculum Vitae experience blueprint */}
+        {/* SECTION 4: Curriculum Vitae experience blueprint */}
         <ResumeView />
 
-        {/* SECTION 4: Supabase admin dashboard */}
+        {/* SECTION 5: Supabase admin dashboard */}
         <Dashboard
           currentSession={session}
           onLoginSuccess={(sess) => setSession(sess)}
@@ -228,7 +236,7 @@ export default function App() {
           onRefreshPortfolio={loadAllContents}
         />
 
-        {/* SECTION 5: Contact Envelope styled inquiry form */}
+        {/* SECTION 6: Contact Envelope styled inquiry form */}
         <ContactForm
           prefilledSubject={prefilledSubject}
           onClearPrefilledSubject={() => setPrefilledSubject('')}

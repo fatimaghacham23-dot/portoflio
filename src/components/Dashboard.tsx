@@ -5,6 +5,7 @@ import {
   Edit3,
   Key,
   LayoutGrid,
+  Palette,
   Lock,
   LogOut,
   Mail,
@@ -14,21 +15,25 @@ import {
   Trash2,
   User,
 } from 'lucide-react';
-import { AdminSession, BlogPost, ContactMessage, Project, ProjectCategory } from '../types';
+import { AdminSession, BlogPost, ContactMessage, FashionSketch, FashionSketchTechnique, Project, ProjectCategory } from '../types';
 import {
   createBlogPost,
   createProject,
+  createFashionSketch,
   deleteBlogPost,
   deleteContactMessage,
   deleteProject,
+  deleteFashionSketch,
   getAdminBlogPosts,
   getAdminProjects,
+  getAdminFashionSketches,
   getContactMessages,
   isSupabaseConfigured,
   signInAdmin,
   updateBlogPost,
   updateContactMessageStatus,
   updateProject,
+  updateFashionSketch,
   uploadPortfolioMedia,
 } from '../utils/api';
 
@@ -67,6 +72,17 @@ const emptyBlogForm = () => ({
   published: true,
 });
 
+
+const emptySketchForm = () => ({
+  title: '',
+  imageUrl: '',
+  description: '',
+  technique: 'Pencil' as FashionSketchTechnique,
+  year: String(new Date().getFullYear()),
+  inspiration: '',
+  published: true,
+});
+
 const parseTags = (value: string) => value.split(',').map(tag => tag.trim()).filter(Boolean);
 
 export default function Dashboard({
@@ -79,10 +95,11 @@ export default function Dashboard({
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
-  const [adminActiveTab, setAdminActiveTab] = useState<'analytics' | 'cms' | 'messages'>('analytics');
+  const [adminActiveTab, setAdminActiveTab] = useState<'analytics' | 'cms' | 'sketches' | 'messages'>('analytics');
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [sketches, setSketches] = useState<FashionSketch[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loadingData, setLoadingData] = useState(false);
 
@@ -98,6 +115,12 @@ export default function Dashboard({
   const [savingBlog, setSavingBlog] = useState(false);
   const [blogFeedback, setBlogFeedback] = useState({ success: false, msg: '' });
 
+  const [sketchForm, setSketchForm] = useState(emptySketchForm);
+  const [editingSketchId, setEditingSketchId] = useState<string | null>(null);
+  const [sketchUploadLoading, setSketchUploadLoading] = useState(false);
+  const [savingSketch, setSavingSketch] = useState(false);
+  const [sketchFeedback, setSketchFeedback] = useState({ success: false, msg: '' });
+
   useEffect(() => {
     if (currentSession) {
       loadDashboardData();
@@ -107,14 +130,16 @@ export default function Dashboard({
   const loadDashboardData = async () => {
     setLoadingData(true);
     try {
-      const [projectRows, blogRows, messageRows] = await Promise.all([
+      const [projectRows, blogRows, sketchRows, messageRows] = await Promise.all([
         getAdminProjects(),
         getAdminBlogPosts(),
+        getAdminFashionSketches(),
         getContactMessages(),
       ]);
 
       setProjects(projectRows);
       setBlogs(blogRows);
+      setSketches(sketchRows);
       setMessages(messageRows);
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -235,6 +260,42 @@ export default function Dashboard({
     }
   };
 
+
+  const handleSketchUpload = async (file: File | undefined) => {
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setSketchFeedback({
+        success: false,
+        msg: 'Fashion sketches support image uploads only.',
+      });
+      return;
+    }
+
+    try {
+      setSketchUploadLoading(true);
+
+      const result = await uploadPortfolioMedia(file);
+
+      setSketchForm(prev => ({
+        ...prev,
+        imageUrl: result.url,
+      }));
+
+      setSketchFeedback({
+        success: true,
+        msg: 'Sketch image uploaded successfully.',
+      });
+    } catch (err: any) {
+      setSketchFeedback({
+        success: false,
+        msg: err.message || 'Sketch upload failed.',
+      });
+    } finally {
+      setSketchUploadLoading(false);
+    }
+  };
+
   const handleBlogSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (savingBlog) return;
@@ -309,6 +370,75 @@ export default function Dashboard({
       published: blog.published,
     });
     setAdminActiveTab('cms');
+  };
+
+
+  const handleSketchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (savingSketch) return;
+
+    if (!sketchForm.title || !sketchForm.imageUrl || !sketchForm.description) {
+      setSketchFeedback({
+        success: false,
+        msg: 'Please provide a sketch title, image, and description.',
+      });
+      return;
+    }
+
+    setSavingSketch(true);
+
+    try {
+      const payload = {
+        title: sketchForm.title,
+        imageUrl: sketchForm.imageUrl,
+        description: sketchForm.description,
+        technique: sketchForm.technique,
+        year: sketchForm.year || undefined,
+        inspiration: sketchForm.inspiration || undefined,
+        published: sketchForm.published,
+      };
+
+      if (editingSketchId) {
+        await updateFashionSketch(editingSketchId, payload);
+        setSketchFeedback({ success: true, msg: 'Fashion sketch updated in Supabase.' });
+      } else {
+        await createFashionSketch(payload);
+        setSketchFeedback({ success: true, msg: 'Fashion sketch saved to Supabase.' });
+      }
+
+      setSketchForm(emptySketchForm());
+      setEditingSketchId(null);
+      await loadDashboardData();
+      onRefreshPortfolio();
+    } catch (err: any) {
+      setSketchFeedback({
+        success: false,
+        msg: err.message || 'Fashion sketch save failed.',
+      });
+    } finally {
+      setSavingSketch(false);
+    }
+  };
+
+  const startSketchEdit = (sketch: FashionSketch) => {
+    setEditingSketchId(sketch.id);
+    setSketchForm({
+      title: sketch.title,
+      imageUrl: sketch.imageUrl,
+      description: sketch.description,
+      technique: sketch.technique,
+      year: sketch.year || '',
+      inspiration: sketch.inspiration || '',
+      published: sketch.published,
+    });
+    setAdminActiveTab('sketches');
+  };
+
+  const handleDeleteSketch = async (id: string) => {
+    if (!window.confirm('Delete this fashion sketch from Supabase?')) return;
+    await deleteFashionSketch(id);
+    await loadDashboardData();
+    onRefreshPortfolio();
   };
 
   const handleDeleteProject = async (id: string) => {
@@ -463,13 +593,14 @@ export default function Dashboard({
                 {[
                   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
                   { id: 'cms', label: 'Content Studio', icon: LayoutGrid },
+                  { id: 'sketches', label: 'Fashion Sketches', icon: Palette },
                   { id: 'messages', label: 'Client Requests', icon: Mail },
                 ].map(tab => {
                   const Icon = tab.icon;
                   return (
                     <button
                       key={tab.id}
-                      onClick={() => setAdminActiveTab(tab.id as 'analytics' | 'cms' | 'messages')}
+                      onClick={() => setAdminActiveTab(tab.id as 'analytics' | 'cms' | 'sketches' | 'messages')}
                       className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs font-body tracking-wide text-left transition-all whitespace-nowrap lg:w-full ${
                         adminActiveTab === tab.id
                           ? 'bg-rose-600/20 text-[#FDA4AF] font-medium border-l-2 border-rose-500'
@@ -618,13 +749,13 @@ export default function Dashboard({
                                 playsInline
                                 controls
                                 style={{ objectPosition: `${projectForm.mediaPositionX}% ${projectForm.mediaPositionY}%` }}
-                                style={{ objectPosition: `${projectForm.mediaPositionX}% ${projectForm.mediaPositionY}%` }}
                                 className="w-full h-56 object-cover rounded-2xl border border-white/10"
                               />
                             ) : (
                               <img
                                 src={projectForm.mediaUrl || projectForm.image}
                                 alt="Project preview"
+                                style={{ objectPosition: `${projectForm.mediaPositionX}% ${projectForm.mediaPositionY}%` }}
                                 className="w-full h-56 object-cover rounded-2xl border border-white/10"
                               />
                             )
@@ -982,6 +1113,237 @@ export default function Dashboard({
                         ) : (
                           <div className="text-slate-500 text-center font-mono py-10 text-xs">
                             No blog posts yet.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
+                {adminActiveTab === 'sketches' && (
+                  <div id="fashion-sketches-panel" className="space-y-10">
+                    <div>
+                      <h4 className="text-lg font-sans font-light">
+                        Fashion Sketch Atelier
+                      </h4>
+                      <p className="text-xs text-slate-400 mt-1">
+                        Publish hand-drawn fashion sketches, illustration studies, and clothing concept boards.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                      <motion.form
+                        onSubmit={handleSketchSubmit}
+                        className="bg-[#0B0F19] p-4 sm:p-6 border border-white/5 rounded-2xl space-y-4"
+                        layout
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono text-[#FDA4AF] uppercase tracking-wider">
+                            {editingSketchId ? 'Edit Fashion Sketch' : 'New Fashion Sketch'}
+                          </span>
+                          {editingSketchId && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingSketchId(null);
+                                setSketchForm(emptySketchForm());
+                              }}
+                              className="text-[10px] text-slate-400 hover:text-white font-mono"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+
+                        <input
+                          value={sketchForm.title}
+                          onChange={(e) => setSketchForm(prev => ({ ...prev, title: e.target.value }))}
+                          placeholder="Sketch title"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
+                        />
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <select
+                            value={sketchForm.technique}
+                            onChange={(e) => setSketchForm(prev => ({
+                              ...prev,
+                              technique: e.target.value as FashionSketchTechnique,
+                            }))}
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
+                          >
+                            <option value="Pencil">Pencil</option>
+                            <option value="Marker">Marker</option>
+                            <option value="Watercolor">Watercolor</option>
+                            <option value="Digital">Digital</option>
+                            <option value="Mixed Media">Mixed Media</option>
+                            <option value="Other">Other</option>
+                          </select>
+
+                          <input
+                            value={sketchForm.year}
+                            onChange={(e) => setSketchForm(prev => ({ ...prev, year: e.target.value }))}
+                            placeholder="Year"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
+                          />
+                        </div>
+
+                        <input
+                          value={sketchForm.imageUrl}
+                          onChange={(e) => setSketchForm(prev => ({ ...prev, imageUrl: e.target.value }))}
+                          placeholder="Sketch image URL"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body"
+                        />
+
+                        <div className="space-y-3">
+                          <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                            Or Upload Sketch Image
+                          </label>
+
+                          <label
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              handleSketchUpload(e.dataTransfer.files?.[0]);
+                            }}
+                            className="w-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl px-4 py-6 cursor-pointer hover:border-rose-400 transition-all bg-slate-950/40"
+                          >
+                            <span className="text-xs text-slate-400 font-body text-center">
+                              Drag & drop sketch image here or click to upload
+                            </span>
+                            <span className="text-[10px] text-slate-600 font-mono mt-1">
+                              PNG, JPEG, WEBP, or GIF up to 5MB
+                            </span>
+
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              className="hidden"
+                              onChange={(e) => {
+                                handleSketchUpload(e.target.files?.[0]);
+                                e.currentTarget.value = '';
+                              }}
+                            />
+                          </label>
+
+                          {sketchUploadLoading && (
+                            <div className="text-xs text-rose-300 font-mono">
+                              Uploading sketch image...
+                            </div>
+                          )}
+
+                          {sketchForm.imageUrl && (
+                            <img
+                              src={sketchForm.imageUrl}
+                              alt="Fashion sketch preview"
+                              className="w-full max-h-96 object-contain bg-white rounded-2xl border border-white/10"
+                            />
+                          )}
+                        </div>
+
+                        <textarea
+                          value={sketchForm.description}
+                          onChange={(e) => setSketchForm(prev => ({ ...prev, description: e.target.value }))}
+                          rows={4}
+                          placeholder="Sketch description"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body resize-none"
+                        />
+
+                        <textarea
+                          value={sketchForm.inspiration}
+                          onChange={(e) => setSketchForm(prev => ({ ...prev, inspiration: e.target.value }))}
+                          rows={3}
+                          placeholder="Inspiration notes (optional)"
+                          className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-rose-400 text-white font-body resize-none"
+                        />
+
+                        <label className="flex items-center gap-2 text-xs text-slate-300 font-body">
+                          <input
+                            type="checkbox"
+                            checked={sketchForm.published}
+                            onChange={(e) => setSketchForm(prev => ({ ...prev, published: e.target.checked }))}
+                            className="accent-rose-600"
+                          />
+                          Published
+                        </label>
+
+                        {sketchFeedback.msg && (
+                          <div className={`p-3 rounded-xl text-xs font-mono border ${
+                            sketchFeedback.success
+                              ? 'bg-emerald-950/30 border-emerald-500/20 text-emerald-300'
+                              : 'bg-red-950/30 border-red-500/20 text-red-300'
+                          }`}>
+                            {sketchFeedback.msg}
+                          </div>
+                        )}
+
+                        <button
+                          type="submit"
+                          disabled={savingSketch || sketchUploadLoading}
+                          className="w-full py-3 bg-rose-600 hover:bg-rose-700 font-body font-semibold text-white rounded-xl text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          {savingSketch ? 'Saving...' : editingSketchId ? 'Update Sketch' : 'Save Sketch'}
+                        </button>
+                      </motion.form>
+
+                      <div className="bg-[#0B0F19] p-4 sm:p-6 border border-white/5 rounded-2xl space-y-4">
+                        <span className="text-xs font-mono text-[#FDA4AF] uppercase tracking-wider">
+                          Published Sketches
+                        </span>
+
+                        {sketches.length > 0 ? (
+                          <div className="space-y-3">
+                            {sketches.map(sketch => (
+                              <div key={sketch.id} className="p-4 bg-slate-950 border border-white/5 rounded-xl min-w-0">
+                                <div className="flex gap-4">
+                                  <img
+                                    src={sketch.imageUrl}
+                                    alt={sketch.title}
+                                    className="w-20 h-24 object-cover rounded-xl bg-white border border-white/10 shrink-0"
+                                  />
+
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div>
+                                        <h5 className="text-sm font-sans font-medium text-white break-words">
+                                          {sketch.title}
+                                        </h5>
+                                        <p className="text-[10px] font-mono text-slate-500 mt-1">
+                                          {sketch.technique} {sketch.year ? `- ${sketch.year}` : ''} - {sketch.published ? 'Published' : 'Draft'}
+                                        </p>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <button
+                                          type="button"
+                                          onClick={() => startSketchEdit(sketch)}
+                                          className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300"
+                                          title="Edit sketch"
+                                        >
+                                          <Edit3 className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteSketch(sketch.id)}
+                                          className="p-2 bg-red-950/40 hover:bg-red-900/60 rounded-lg text-red-300"
+                                          title="Delete sketch"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    <p className="text-xs text-slate-500 font-body mt-3 line-clamp-2">
+                                      {sketch.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-slate-500 text-center font-mono py-10 text-xs">
+                            No fashion sketches published yet.
                           </div>
                         )}
                       </div>

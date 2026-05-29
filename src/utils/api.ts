@@ -8,6 +8,9 @@ import {
   ContactMessageStatus,
   GraphicDetails,
   FashionDetails,
+  FashionSketch,
+  FashionSketchInput,
+  FashionSketchTechnique,
   Project,
   ProjectCategory,
   ProjectInput,
@@ -81,6 +84,19 @@ interface ContactMessageRow {
   updated_at: string | null;
 }
 
+interface FashionSketchRow {
+  id: string;
+  title: string;
+  image_url: string;
+  description: string;
+  technique: FashionSketchTechnique;
+  sketch_year: string | null;
+  inspiration: string | null;
+  published: boolean;
+  created_at: string;
+  updated_at: string | null;
+}
+
 function mapProject(row: ProjectRow): Project {
   return {
     id: row.id,
@@ -130,6 +146,33 @@ function mapContactMessage(row: ContactMessageRow): ContactMessage {
     status: row.status,
     createdAt: row.created_at,
     updatedAt: row.updated_at ?? undefined,
+  };
+}
+
+function mapFashionSketch(row: FashionSketchRow): FashionSketch {
+  return {
+    id: row.id,
+    title: row.title,
+    imageUrl: row.image_url,
+    description: row.description,
+    technique: row.technique,
+    year: row.sketch_year ?? undefined,
+    inspiration: row.inspiration ?? undefined,
+    published: row.published,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at ?? undefined,
+  };
+}
+
+function fashionSketchToRow(sketch: FashionSketchInput) {
+  return {
+    title: sketch.title,
+    image_url: sketch.imageUrl,
+    description: sketch.description,
+    technique: sketch.technique,
+    sketch_year: sketch.year || null,
+    inspiration: sketch.inspiration || null,
+    published: sketch.published ?? true,
   };
 }
 
@@ -212,6 +255,61 @@ export async function updateProject(id: string, project: ProjectInput): Promise<
 
 export async function deleteProject(id: string): Promise<void> {
   const { error } = await getSupabaseClient().from('projects').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+
+export async function getFashionSketches(): Promise<FashionSketch[]> {
+  const { data, error } = await getSupabaseClient()
+    .from('fashion_sketches')
+    .select('*')
+    .eq('published', true)
+    .order('sketch_year', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(row => mapFashionSketch(row as FashionSketchRow));
+}
+
+export async function getAdminFashionSketches(): Promise<FashionSketch[]> {
+  const { data, error } = await getSupabaseClient()
+    .from('fashion_sketches')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(row => mapFashionSketch(row as FashionSketchRow));
+}
+
+export async function createFashionSketch(sketch: FashionSketchInput): Promise<FashionSketch> {
+  const { data, error } = await getSupabaseClient()
+    .from('fashion_sketches')
+    .insert(fashionSketchToRow(sketch))
+    .select('*')
+    .single();
+
+  if (error) throw new Error(error.message);
+  return mapFashionSketch(data as FashionSketchRow);
+}
+
+export async function updateFashionSketch(id: string, sketch: FashionSketchInput): Promise<FashionSketch> {
+  const { data, error } = await getSupabaseClient()
+    .from('fashion_sketches')
+    .update(fashionSketchToRow(sketch))
+    .eq('id', id)
+    .select('*')
+    .single();
+
+  if (error) throw new Error(error.message);
+  return mapFashionSketch(data as FashionSketchRow);
+}
+
+export async function deleteFashionSketch(id: string): Promise<void> {
+  const { error } = await getSupabaseClient()
+    .from('fashion_sketches')
+    .delete()
+    .eq('id', id);
+
   if (error) throw new Error(error.message);
 }
 

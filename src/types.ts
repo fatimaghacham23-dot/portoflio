@@ -102,3 +102,35 @@ export interface AdminSession {
   username: string;
   email: string;
 }
+
+
+export type FashionSketchTechnique =
+  | 'Pencil'
+  | 'Marker'
+  | 'Watercolor'
+  | 'Digital'
+  | 'Mixed Media'
+  | 'Other';
+
+export interface FashionSketch {
+  id: string;
+  title: string;
+  imageUrl: string;
+  description: string;
+  technique: FashionSketchTechnique;
+  year?: string;
+  inspiration?: string;
+  published: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface FashionSketchInput {
+  title: string;
+  imageUrl: string;
+  description: string;
+  technique: FashionSketchTechnique;
+  year?: string;
+  inspiration?: string;
+  published?: boolean;
+}
